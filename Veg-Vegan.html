@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veg/Vegan Dishes | CaloriChef</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .dish-card {
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .dish-card:hover {
+      transform: scale(1.02);
+    }
+    .filter-select {
+      max-width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Veg & Vegan Indian Dishes</h2>
+
+  <div class="d-flex justify-content-center mb-4 gap-3 flex-wrap">
+    <select class="form-select filter-select" id="filter-nutrient">
+      <option value="all">Filter by Nutrient</option>
+      <option value="high-protein">High Protein</option>
+      <option value="low-fat">Low Fat</option>
+      <option value="low-carb">Low Carb</option>
+      <option value="low-calories">Low Calories</option>
+    </select>
+  </div>
+
+  <div class="row" id="dishContainer">
+    <!-- Dish Cards -->
+  </div>
+</div>
+
+<script>
+const dishes = [
+  {
+    name: "Palak Tofu Curry",
+    img: "https://plus.unsplash.com/premium_photo-1713089366140-814130d69933?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    nutrition: "Protein: 18g | Carbs: 10g | Fat: 12g | Calories: 240",
+    ingredients: "Tofu, Spinach, Spices",
+    cost: "₹180",
+    prep: "25 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-carb"]
+  },
+  {
+    name: "Chickpea Salad",
+    img: "https://images.unsplash.com/photo-1582576163090-09d3b6f8a969?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    nutrition: "Protein: 15g | Carbs: 22g | Fat: 6g | Calories: 220",
+    ingredients: "Chickpeas, Tomato, Onion, Lemon",
+    cost: "₹150",
+    prep: "15 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-fat"]
+  },
+  {
+    name: "Quinoa Pulao",
+    img: "https://media.istockphoto.com/id/521201512/photo/pilaf.webp?a=1&b=1&s=612x612&w=0&k=20&c=37Nw3f2R7k8XzFEL6CfjjSlX4P8KVkA4rBjWV_VxRP4=",
+    nutrition: "Protein: 10g | Carbs: 25g | Fat: 4g | Calories: 210",
+    ingredients: "Quinoa, Vegetables, Spices",
+    cost: "₹170",
+    prep: "30 mins",
+    availability: "Available",
+    tags: ["low-fat", "low-calories"]
+  },
+  {
+    name: "Vegan Dal Fry",
+    img: "https://media.istockphoto.com/id/1137114405/photo/dahl-lentils-stew.webp?a=1&b=1&s=612x612&w=0&k=20&c=-YUeRgV7V6c434rILoTR8Hv3RWTSf-QoBtYlgKX2fHw=",
+    nutrition: "Protein: 12g | Carbs: 18g | Fat: 6g | Calories: 200",
+    ingredients: "Lentils, Tomato, Garlic, Spices",
+    cost: "₹140",
+    prep: "30 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-fat"]
+  },
+  {
+    name: "Stuffed Bell Peppers",
+    img: "https://media.istockphoto.com/id/1423715428/photo/stuffed-peppers.webp?a=1&b=1&s=612x612&w=0&k=20&c=2af6_ezpcCXOzW1z5fpgtcXHeJz0ylMJp0SmJtd1pFg=",
+    nutrition: "Protein: 10g | Carbs: 14g | Fat: 7g | Calories: 190",
+    ingredients: "Bell Pepper, Rice, Veggies",
+    cost: "₹160",
+    prep: "35 mins",
+    availability: "Available",
+    tags: ["low-calories", "low-fat"]
+  },
+  {
+    name: "Vegan Sambar",
+    img: "https://media.istockphoto.com/id/1169102817/photo/kerala-sambar-dish.webp?a=1&b=1&s=612x612&w=0&k=20&c=q_n9KW0cKgv-HptzzlM1aNENz9Bn4jUVBBnmgN8XImc=",
+    nutrition: "Protein: 9g | Carbs: 20g | Fat: 3g | Calories: 180",
+    ingredients: "Toor Dal, Veggies, Tamarind",
+    cost: "₹130",
+    prep: "30 mins",
+    availability: "Available",
+    tags: ["low-fat", "low-calories"]
+  }
+];
+
+function renderDishes(filter = "all") {
+  const container = document.getElementById("dishContainer");
+  container.innerHTML = "";
+
+  const filtered = filter === "all" ? dishes : dishes.filter(d => d.tags.includes(filter));
+
+  filtered.forEach(dish => {
+    const card = document.createElement("div");
+    card.className = "col-md-4 mb-4";
+    card.innerHTML = `
+      <div class="card dish-card h-100">
+        <img src="${dish.img}" class="card-img-top" alt="${dish.name}" style="height: 200px; object-fit: cover;">
+        <div class="card-body">
+          <h5 class="card-title">${dish.name}</h5>
+          <p><strong>Ingredients:</strong> ${dish.ingredients}</p>
+          <p><strong>Nutrition:</strong> ${dish.nutrition}</p>
+          <p><strong>Prep Time:</strong> ${dish.prep}</p>
+          <p><strong>Cost:</strong> ${dish.cost}</p>
+          <p><strong>Status:</strong> ${dish.availability}</p>
+          <a href="payment.html?meal=${encodeURIComponent(dish.name)}" class="btn btn-success">Order Now</a>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderDishes();
+
+document.getElementById("filter-nutrient").addEventListener("change", (e) => {
+  renderDishes(e.target.value);
+});
+</script>
+
+</body>
+</html>

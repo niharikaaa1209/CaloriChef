@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keto Dishes | CaloriChef</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .dish-card {
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .dish-card:hover {
+      transform: scale(1.02);
+    }
+    .filter-select {
+      max-width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Indian Keto-Friendly Dishes</h2>
+
+  <div class="d-flex justify-content-center mb-4 gap-3 flex-wrap">
+    <select class="form-select filter-select" id="filter-nutrient">
+      <option value="all">Filter by Nutrient</option>
+      <option value="high-protein">High Protein</option>
+      <option value="low-fat">Low Fat</option>
+      <option value="low-carb">Low Carb</option>
+      <option value="low-calories">Low Calories</option>
+    </select>
+  </div>
+
+  <div class="row" id="dishContainer">
+    <!-- Dish Cards -->
+  </div>
+</div>
+
+<script>
+const dishes = [
+  {
+    name: "Low carb cheese taco shells",
+    img: "https://media.istockphoto.com/id/1171425544/photo/colorful-street-tacos-shrimp-seafood-fish-grilled-ready-to-eat.webp?a=1&b=1&s=612x612&w=0&k=20&c=CeBjKuJ268IWvTIdun_fopBjROTCJOfClL8OHFFwUz0=",
+    nutrition: "Protein: 25g | Carbs: 6g | Fat: 15g | Calories: 290",
+    ingredients: "Paneer, Tomato, Onion, Spices",
+    cost: "₹200",
+    prep: "20 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-carb"]
+  },
+  {
+    name: "cauliflower fried rice",
+    img: "https://media.istockphoto.com/id/1132287969/photo/cauliflower-rice-in-a-bowl-low-carb-food.webp?a=1&b=1&s=612x612&w=0&k=20&c=ubYetDRfokwa8ZBKtlr41ZtCsORrNvFg-Pzx4Lr6COs=",
+    nutrition: "Protein: 30g | Carbs: 5g | Fat: 12g | Calories: 310",
+    ingredients: "Chicken, Coconut Milk, Spices",
+    cost: "₹250",
+    prep: "35 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-carb"]
+  },
+  {
+    name: "Egg & Spinach Stir Fry",
+    img: "https://media.istockphoto.com/id/2167220495/photo/indonesian-food-mie-goreng-or-fried-noodles.webp?a=1&b=1&s=612x612&w=0&k=20&c=D-BJ1k_E4Wnsahrj3lKVks7IVGq-vN3uZdwhBQsk79w=",
+    nutrition: "Protein: 20g | Carbs: 4g | Fat: 10g | Calories: 220",
+    ingredients: "Eggs, Spinach, Olive Oil, Spices",
+    cost: "₹180",
+    prep: "15 mins",
+    availability: "Available",
+    tags: ["low-carb", "low-calories"]
+  },
+  {
+    name: "Low carb sesame chicken",
+    img: "https://media.istockphoto.com/id/1285533106/photo/homemade-vegan-buffalo-wings-with-yogurt-dip.webp?a=1&b=1&s=612x612&w=0&k=20&c=0-sMPuodqMGfwTNv_dcWuQykiNDE7cWLZ6z2qtRi2tY=",
+    nutrition: "Protein: 8g | Carbs: 5g | Fat: 7g | Calories: 160",
+    ingredients: "Cauliflower, Mustard Seeds, Spices",
+    cost: "₹160",
+    prep: "20 mins",
+    availability: "Available",
+    tags: ["low-carb", "low-calories"]
+  },
+  {
+    name: "Keto brownies",
+    img: "https://media.istockphoto.com/id/1203579318/photo/gluten-free-low-carbohydrate-fudge-brownies-with-sea-salted-pecans.webp?a=1&b=1&s=612x612&w=0&k=20&c=y_YAYCIvj3f_GoiY2p4eQon8w-bTy9nJBF6U9xnmYto=",
+    nutrition: "Protein: 28g | Carbs: 4g | Fat: 9g | Calories: 260",
+    ingredients: "Chicken, Methi, Spices, Cream",
+    cost: "₹240",
+    prep: "30 mins",
+    availability: "Available",
+    tags: ["high-protein", "low-carb"]
+  },
+  {
+    name: "Keto Smoothie",
+    img: "https://media.istockphoto.com/id/1335665727/photo/chia-pudding-with-blue-matcha-yogurt-and-fruits-copy-space.webp?a=1&b=1&s=612x612&w=0&k=20&c=SZIvXviKq-IkGS1tgbXtMowHY_zrMPExHIdjW3WUZmA=",
+    nutrition: "Protein: 18g | Carbs: 3g | Fat: 8g | Calories: 210",
+    ingredients: "Egg, Coconut Flour, Spices",
+    cost: "₹190",
+    prep: "25 mins",
+    availability: "Available",
+    tags: ["low-carb", "low-fat"]
+  }
+];
+
+function renderDishes(filter = "all") {
+  const container = document.getElementById("dishContainer");
+  container.innerHTML = "";
+
+  const filtered = filter === "all" ? dishes : dishes.filter(d => d.tags.includes(filter));
+
+  filtered.forEach(dish => {
+    const card = document.createElement("div");
+    card.className = "col-md-4 mb-4";
+    card.innerHTML = `
+      <div class="card dish-card h-100">
+        <img src="${dish.img}" class="card-img-top" alt="${dish.name}" style="height: 200px; object-fit: cover;">
+        <div class="card-body">
+          <h5 class="card-title">${dish.name}</h5>
+          <p><strong>Ingredients:</strong> ${dish.ingredients}</p>
+          <p><strong>Nutrition:</strong> ${dish.nutrition}</p>
+          <p><strong>Prep Time:</strong> ${dish.prep}</p>
+          <p><strong>Cost:</strong> ${dish.cost}</p>
+          <p><strong>Status:</strong> ${dish.availability}</p>
+          <a href="payment.html?meal=${encodeURIComponent(dish.name)}" class="btn btn-success">Order Now</a>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderDishes();
+
+document.getElementById("filter-nutrient").addEventListener("change", (e) => {
+  renderDishes(e.target.value);
+});
+</script>
+
+</body>
+</html>
