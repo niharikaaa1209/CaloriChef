@@ -1,4 +1,4 @@
-# 🍽️ CaloriChef - Restaurant Menu Management System
+ CaloriChef - Restaurant Menu Management System
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
 ![Flask](https://img.shields.io/badge/Flask-Web%20Framework-lightgrey?logo=flask)
